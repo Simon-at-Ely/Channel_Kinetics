@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<channelml xmlns="http://morphml.org/channelml/schema" 
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	   xmlns:meta="http://morphml.org/metadata/schema" 
-	   xsi:schemaLocation="http://morphml.org/channelml/schema http://www.neuroml.org/NeuroMLValidator/NeuroMLFiles/Schemata/v1.8.1/Level2/ChannelML_v1.8.1.xsd" 
-	   units="Physiological Units">
+<channelml xmlns="http://morphml.org/channelml/schema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:meta="http://morphml.org/metadata/schema" xsi:schemaLocation="http://morphml.org/channelml/schema http://www.neuroml.org/NeuroMLValidator/NeuroMLFiles/Schemata/v1.8.1/Level2/ChannelML_v1.8.1.xsd" units="Physiological Units">
 
     <meta:notes>AOB Mitral Cell R-Type Calcium Channel</meta:notes>
 
@@ -31,7 +27,8 @@
 	<meta:uri>http://senselab.med.yale.edu/neurondb/channelGene2.aspx#table1</meta:uri>
       </meta:neuronDBref>
 
-      <current_voltage_relation cond_law="ohmic" ion="ca" default_gmax="0.15" default_erev="80" charge="2" fixed_erev="yes">                     <!-- In the orig model, [Ca] alterations didn't alter erev for channel from 80mV -->
+      <current_voltage_relation cond_law="ohmic" ion="ca" default_gmax="0.15" default_erev="80" charge="2" fixed_erev="yes">                         <!-- In the orig model, [Ca] alterations didn't alter erev for channel from 80mV -->
+
 
 
 
@@ -42,7 +39,7 @@
 	<closed_state id="m0"/>
 	<open_state id="m"/>
 
-                <time_course name="tau" from="m0" to="m" expr_form="generic" expr="3.1738 + (25.238 * (exp(-1 * ((v+30)/17.498))))"/>
+                <time_course name="tau" from="m0" to="m" expr_form="generic" expr="3.4 / ((exp (( v - 25)/26)) + (exp ((-v - 120)/26)))"/>
                 <steady_state name="inf" from="m0" to="m" expr_form="sigmoid" rate="1" scale="2.0914" midpoint="-38.037"/>
 
       </gate>
@@ -51,8 +48,8 @@
 	<closed_state id="h0"/>
 	<open_state id="h"/>
 
-                <time_course name="tau" from="h0" to="h" expr_form="generic" expr="10.8 + (3.0 * (exp(-1 * ((v+20)/8.13))))"/>
-                <steady_state name="inf" from="h0" to="h" expr_form="generic" expr="1/1+(exp(-1 * (v-(-38.037))/-2.0914)) + 0.6928/1+(exp(-1 * (v-(-38.037))/2.0914))"/>
+                <time_course name="tau" from="h0" to="h" expr_form="generic" expr="9.5 / ((exp (( v - 28)/50)) + (exp ((-v - 130)/50)))"/>
+                <steady_state name="inf" from="h0" to="h" expr_form="generic" expr="1/(1+(exp(-1 * (v-(-38.037))/-2.0914))) + 0.6928/(1+(exp(-1 * (v-(-38.037))/2.0914)))"/>
 
       </gate>
     </current_voltage_relation>

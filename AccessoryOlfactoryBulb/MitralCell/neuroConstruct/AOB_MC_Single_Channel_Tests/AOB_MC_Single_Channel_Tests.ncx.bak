@@ -532,7 +532,7 @@ part of NeuroML or any standardised XML specification. -->
    <float>0.025</float>
   </void>
   <void property="duration">
-   <float>2000.0</float>
+   <float>10000.0</float>
   </void>
   <void property="reference">
    <string>Sim_11</string>
