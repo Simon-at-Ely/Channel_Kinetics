@@ -36,10 +36,8 @@ COMMENT
    /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@name = inf 
    /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@from = m0 
    /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@to = m 
-   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@expr_form = sigmoid 
-   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@rate = 1 
-   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@scale = 4.4 
-   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@midpoint = -25.7 
+   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@expr_form = generic 
+   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@expr = v &lt; -50 ? 0 : 1 / (1 + exp(0 - (v + 25.7)/4.4)) 
    /channelml/channel_type/current_voltage_relation/gate[2]/@name = h 
    /channelml/channel_type/current_voltage_relation/gate[2]/@instances = 1 
    /channelml/channel_type/current_voltage_relation/gate[2]/closed_state/@id = h0 
@@ -54,8 +52,8 @@ COMMENT
    /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@to = h 
    /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@expr_form = sigmoid 
    /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@rate = 1 
-   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@scale = -4.4 
-   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@midpoint = -25.8 
+   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@scale = 4.4 
+   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@midpoint = -25 
 
 // File from which this was generated: /home/Simon/Channel_Kinetics/AccessoryOlfactoryBulb/MitralCell/neuroConstruct/AOB_MC_Single_Channel_Tests/cellMechanisms/KA_iAMC_ChannelML/KA_chan.xml
 
@@ -183,8 +181,7 @@ PROCEDURE rates(v(mV)) {
     
     ? Note: not all of these may be used, depending on the form of rate equations
     LOCAL  alpha, beta, tau, inf, gamma, zeta
-, temp_adj_m,
-         A_inf_m, B_inf_m, Vhalf_inf_m
+, temp_adj_m
 , temp_adj_h,
          A_inf_h, B_inf_h, Vhalf_inf_h
     
@@ -206,13 +203,15 @@ PROCEDURE rates(v(mV)) {
     tau = (1+4*exp(-((v-32)/50)^2))
         
     mtau = tau/temp_adj_m
+     
+    ? Found a generic form of the rate equation for inf, using expression: v < -50 ? 0 : 1 / (1 + exp(0 - (v + 25.7)/4.4))
     
-    ? Found a parameterised form of rate equation for inf, using expression: A / (1 + exp((v-Vhalf)/B))
-    A_inf_m = 1
-    B_inf_m = 4.4
-    Vhalf_inf_m = -25.7 
-    inf = A_inf_m / (exp((v - Vhalf_inf_m) / B_inf_m) + 1)
     
+    if (v < -50 ) {
+        inf =  0 
+    } else {
+        inf =  1 / (1 + exp(0 - (v + 25.7)/4.4))
+    }
     minf = inf
     
 
@@ -235,8 +234,8 @@ PROCEDURE rates(v(mV)) {
     
     ? Found a parameterised form of rate equation for inf, using expression: A / (1 + exp((v-Vhalf)/B))
     A_inf_h = 1
-    B_inf_h = -4.4
-    Vhalf_inf_h = -25.8 
+    B_inf_h = 4.4
+    Vhalf_inf_h = -25 
     inf = A_inf_h / (exp((v - Vhalf_inf_h) / B_inf_h) + 1)
     
     hinf = inf

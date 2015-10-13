@@ -37,7 +37,7 @@
 	  <open_state id="m"/>
 
 	  <time_course name="tau" from="m0" to="m" expr_form="generic" expr="(1+4*exp(-((v-32)/50)^2))"/>
-	  <steady_state name="inf" from="m0" to="m" expr_form="sigmoid" rate="1" scale="4.4" midpoint="-25.7"/>
+	  <steady_state name="inf" from="m0" to="m" expr_form="generic" expr="v &lt; -50 ? 0 : 1 / (1 + exp(0 - (v + 25.7)/4.4))"/>
 
 	</gate>
 
@@ -46,7 +46,7 @@
 	  <open_state id="h"/>
 
 	  <time_course name="tau" from="h0" to="h" expr_form="generic" expr="(1+100*exp(-((v-10)/40)^2))"/>
-	  <steady_state name="inf" from="h0" to="h" expr_form="sigmoid" rate="1" scale="-4.4" midpoint="-25.8"/>
+	  <steady_state name="inf" from="h0" to="h" expr_form="sigmoid" rate="1" scale="4.4" midpoint="-25"/>
 
 	</gate>
       </current_voltage_relation>

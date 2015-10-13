@@ -32,16 +32,16 @@
                 <closed_state id="m0"/>
                 <open_state id="m" fraction="1"/> 
 
-                <time_course name="tau" from="m0" to="m" expr_form="generic" expr="(fabs(v + 38)) &lt; 0.0001 ? 0.0013071895424837 : 1 / ((91 * (v + 38))/(1 - exp(-(v + 38)/5)) + (-62 * (v + 38))/(1 - exp((v + 38)/5)))"/>
-                <steady_state name="inf" from="m0" to="m" expr_form="generic" expr="(0.41431+(108.69/(1+exp((-60.563-v)/5.2909))))/(v-67)/(109/(-107)) &gt; 0.499622025796 ? 0.499622025796 : (0.41431+(108.69/(1+exp((-60.563-v)/5.2909))))/(v-67)/(109/(-107))"/>
+                <time_course name="tau" from="m0" to="m" expr_form="generic" expr="(1+(4 * (exp(0 - ((v + 50)/20)^2))))"/>
+                <steady_state name="inf" from="m0" to="m" expr_form="sigmoid" rate="0.499622025796" scale="-4.9" midpoint="-59.0"/>
 	    </gate>
         
             <gate name="h" instances="1">
                 <closed_state id="h0"/>
                 <open_state id="h" fraction="1"/>
                      
-                <time_course name="tau" from="h0" to="h" expr_form="generic" expr="1 / ((-0.00288*(v + 17.049))/(1 - exp((v - 49.1)/4.63)) + (0.00694*(v + 64.409))/(1 - exp(-(v + 447)/2.63)))"/>
-                <steady_state name="inf" from="h0" to="h" expr_form="generic" expr="(0.41431+(108.69/(1+exp((-60.563-v)/-5.2909))))/(v-67)/(109/(-107))"/>
+                <time_course name="tau" from="h0" to="h" expr_form="generic" expr="(5000+(16000 * (exp(0 - ((v + 50)/20)^2))))"/>
+                <steady_state name="inf" from="h0" to="h" expr_form="sigmoid" rate="0.499622025796" scale="4.9" midpoint="-59.0"/>
 	    </gate>
 
 	</current_voltage_relation>        

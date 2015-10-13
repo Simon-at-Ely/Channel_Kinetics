@@ -308,26 +308,22 @@ _check_rates(_p, _ppvar, _thread, _nt);
 
  
 static int  _f_rates ( _threadargsprotocomma_ double _lv ) {
-   double _lalpha , _lbeta , _ltau , _linf , _lgamma , _lzeta , _ltemp_adj_m , _ltemp_adj_h ;
+   double _lalpha , _lbeta , _ltau , _linf , _lgamma , _lzeta , _ltemp_adj_m , _lA_inf_m , _lB_inf_m , _lVhalf_inf_m , _ltemp_adj_h , _lA_inf_h , _lB_inf_h , _lVhalf_inf_h ;
   _ltemp_adj_m = 1.0 ;
    _ltemp_adj_h = 1.0 ;
-   if ( ( fabs ( _lv + 38.0 ) ) < 0.0001 ) {
-     _ltau = 0.0013071895424837 ;
-     }
-   else {
-     _ltau = 1.0 / ( ( 91.0 * ( _lv + 38.0 ) ) / ( 1.0 - exp ( - ( _lv + 38.0 ) / 5.0 ) ) + ( - 62.0 * ( _lv + 38.0 ) ) / ( 1.0 - exp ( ( _lv + 38.0 ) / 5.0 ) ) ) ;
-     }
+   _ltau = ( 1.0 + ( 4.0 * ( exp ( 0.0 - pow( ( ( _lv + 50.0 ) / 20.0 ) , 2.0 ) ) ) ) ) ;
    mtau = _ltau / _ltemp_adj_m ;
-   if ( ( 0.41431 + ( 108.69 / ( 1.0 + exp ( ( - 60.563 - _lv ) / 5.2909 ) ) ) ) / ( _lv - 67.0 ) / ( 109.0 / ( - 107.0 ) ) > 0.499622025796 ) {
-     _linf = 0.499622025796 ;
-     }
-   else {
-     _linf = ( 0.41431 + ( 108.69 / ( 1.0 + exp ( ( - 60.563 - _lv ) / 5.2909 ) ) ) ) / ( _lv - 67.0 ) / ( 109.0 / ( - 107.0 ) ) ;
-     }
+   _lA_inf_m = 0.499622025796 ;
+   _lB_inf_m = - 4.9 ;
+   _lVhalf_inf_m = - 59.0 ;
+   _linf = _lA_inf_m / ( exp ( ( _lv - _lVhalf_inf_m ) / _lB_inf_m ) + 1.0 ) ;
    minf = _linf ;
-   _ltau = 1.0 / ( ( - 0.00288 * ( _lv + 17.049 ) ) / ( 1.0 - exp ( ( _lv - 49.1 ) / 4.63 ) ) + ( 0.00694 * ( _lv + 64.409 ) ) / ( 1.0 - exp ( - ( _lv + 447.0 ) / 2.63 ) ) ) ;
+   _ltau = ( 5000.0 + ( 16000.0 * ( exp ( 0.0 - pow( ( ( _lv + 50.0 ) / 20.0 ) , 2.0 ) ) ) ) ) ;
    htau = _ltau / _ltemp_adj_h ;
-   _linf = ( 0.41431 + ( 108.69 / ( 1.0 + exp ( ( - 60.563 - _lv ) / - 5.2909 ) ) ) ) / ( _lv - 67.0 ) / ( 109.0 / ( - 107.0 ) ) ;
+   _lA_inf_h = 0.499622025796 ;
+   _lB_inf_h = 4.9 ;
+   _lVhalf_inf_h = - 59.0 ;
+   _linf = _lA_inf_h / ( exp ( ( _lv - _lVhalf_inf_h ) / _lB_inf_h ) + 1.0 ) ;
    hinf = _linf ;
     return 0; }
  

@@ -308,21 +308,23 @@ _check_rates(_p, _ppvar, _thread, _nt);
 
  
 static int  _f_rates ( _threadargsprotocomma_ double _lv ) {
-   double _lalpha , _lbeta , _ltau , _linf , _lgamma , _lzeta , _ltemp_adj_m , _lA_inf_m , _lB_inf_m , _lVhalf_inf_m , _ltemp_adj_h , _lA_inf_h , _lB_inf_h , _lVhalf_inf_h ;
+   double _lalpha , _lbeta , _ltau , _linf , _lgamma , _lzeta , _ltemp_adj_m , _ltemp_adj_h , _lA_inf_h , _lB_inf_h , _lVhalf_inf_h ;
   _ltemp_adj_m = 1.0 ;
    _ltemp_adj_h = 1.0 ;
    _ltau = ( 1.0 + 4.0 * exp ( - pow( ( ( _lv - 32.0 ) / 50.0 ) , 2.0 ) ) ) ;
    mtau = _ltau / _ltemp_adj_m ;
-   _lA_inf_m = 1.0 ;
-   _lB_inf_m = 4.4 ;
-   _lVhalf_inf_m = - 25.7 ;
-   _linf = _lA_inf_m / ( exp ( ( _lv - _lVhalf_inf_m ) / _lB_inf_m ) + 1.0 ) ;
+   if ( _lv < - 50.0 ) {
+     _linf = 0.0 ;
+     }
+   else {
+     _linf = 1.0 / ( 1.0 + exp ( 0.0 - ( _lv + 25.7 ) / 4.4 ) ) ;
+     }
    minf = _linf ;
    _ltau = ( 1.0 + 100.0 * exp ( - pow( ( ( _lv - 10.0 ) / 40.0 ) , 2.0 ) ) ) ;
    htau = _ltau / _ltemp_adj_h ;
    _lA_inf_h = 1.0 ;
-   _lB_inf_h = - 4.4 ;
-   _lVhalf_inf_h = - 25.8 ;
+   _lB_inf_h = 4.4 ;
+   _lVhalf_inf_h = - 25.0 ;
    _linf = _lA_inf_h / ( exp ( ( _lv - _lVhalf_inf_h ) / _lB_inf_h ) + 1.0 ) ;
    hinf = _linf ;
     return 0; }

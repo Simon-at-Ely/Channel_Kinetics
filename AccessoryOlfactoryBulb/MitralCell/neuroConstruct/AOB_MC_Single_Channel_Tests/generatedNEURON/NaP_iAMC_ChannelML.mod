@@ -33,12 +33,14 @@ COMMENT
    /channelml/channel_type/current_voltage_relation/gate[1]/time_course/@from = m0 
    /channelml/channel_type/current_voltage_relation/gate[1]/time_course/@to = m 
    /channelml/channel_type/current_voltage_relation/gate[1]/time_course/@expr_form = generic 
-   /channelml/channel_type/current_voltage_relation/gate[1]/time_course/@expr = (fabs(v + 38)) &lt; 0.0001 ? 0.0013071895424837 : 1 / ((91 * (v + 38))/(1 - exp(-(v + 38)/5)) + (-62 * (v + 38))/(1 - exp((v + 38)/5))) 
+   /channelml/channel_type/current_voltage_relation/gate[1]/time_course/@expr = (1+(4 * (exp(0 - ((v + 50)/20)^2)))) 
    /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@name = inf 
    /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@from = m0 
    /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@to = m 
-   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@expr_form = generic 
-   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@expr = (0.41431+(108.69/(1+exp((-60.563-v)/5.2909))))/(v-67)/(109/(-107)) &gt; 0.499622025796 ? 0.499622025796 : (0.41431+(108.69/(1+exp((-60.563-v)/5.2909)) ... 
+   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@expr_form = sigmoid 
+   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@rate = 0.499622025796 
+   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@scale = -4.9 
+   /channelml/channel_type/current_voltage_relation/gate[1]/steady_state/@midpoint = -59.0 
    /channelml/channel_type/current_voltage_relation/gate[2]/@name = h 
    /channelml/channel_type/current_voltage_relation/gate[2]/@instances = 1 
    /channelml/channel_type/current_voltage_relation/gate[2]/closed_state/@id = h0 
@@ -48,12 +50,14 @@ COMMENT
    /channelml/channel_type/current_voltage_relation/gate[2]/time_course/@from = h0 
    /channelml/channel_type/current_voltage_relation/gate[2]/time_course/@to = h 
    /channelml/channel_type/current_voltage_relation/gate[2]/time_course/@expr_form = generic 
-   /channelml/channel_type/current_voltage_relation/gate[2]/time_course/@expr = 1 / ((-0.00288*(v + 17.049))/(1 - exp((v - 49.1)/4.63)) + (0.00694*(v + 64.409))/(1 - exp(-(v + 447)/2.63))) 
+   /channelml/channel_type/current_voltage_relation/gate[2]/time_course/@expr = (5000+(16000 * (exp(0 - ((v + 50)/20)^2)))) 
    /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@name = inf 
    /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@from = h0 
    /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@to = h 
-   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@expr_form = generic 
-   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@expr = (0.41431+(108.69/(1+exp((-60.563-v)/-5.2909))))/(v-67)/(109/(-107)) 
+   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@expr_form = sigmoid 
+   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@rate = 0.499622025796 
+   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@scale = 4.9 
+   /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@midpoint = -59.0 
    /channelml/channel_type/impl_prefs/table_settings/@max_v = 100 
    /channelml/channel_type/impl_prefs/table_settings/@min_v = -100 
    /channelml/channel_type/impl_prefs/table_settings/@table_divisions = 2000 
@@ -184,8 +188,10 @@ PROCEDURE rates(v(mV)) {
     
     ? Note: not all of these may be used, depending on the form of rate equations
     LOCAL  alpha, beta, tau, inf, gamma, zeta
-, temp_adj_m
-, temp_adj_h
+, temp_adj_m,
+         A_inf_m, B_inf_m, Vhalf_inf_m
+, temp_adj_h,
+         A_inf_h, B_inf_h, Vhalf_inf_h
     
     TABLE minf, mtau,hinf, htau
  DEPEND celsius FROM -100 TO 100 WITH 2000
@@ -201,24 +207,17 @@ PROCEDURE rates(v(mV)) {
         
     ?      ***  Adding rate equations for gate: m  ***
          
-    ? Found a generic form of the rate equation for tau, using expression: (fabs(v + 38)) < 0.0001 ? 0.0013071895424837 : 1 / ((91 * (v + 38))/(1 - exp(-(v + 38)/5)) + (-62 * (v + 38))/(1 - exp((v + 38)/5)))
-    
-    
-    if ((fabs(v + 38)) < 0.0001 ) {
-        tau =  0.0013071895424837 
-    } else {
-        tau =  1 / ((91 * (v + 38))/(1 - exp(-(v + 38)/5)) + (-62 * (v + 38))/(1 - exp((v + 38)/5)))
-    }
+    ? Found a generic form of the rate equation for tau, using expression: (1+(4 * (exp(0 - ((v + 50)/20)^2))))
+    tau = (1+(4 * (exp(0 - ((v + 50)/20)^2))))
+        
     mtau = tau/temp_adj_m
-     
-    ? Found a generic form of the rate equation for inf, using expression: (0.41431+(108.69/(1+exp((-60.563-v)/5.2909))))/(v-67)/(109/(-107)) > 0.499622025796 ? 0.499622025796 : (0.41431+(108.69/(1+exp((-60.563-v)/5.2909))))/(v-67)/(109/(-107))
     
+    ? Found a parameterised form of rate equation for inf, using expression: A / (1 + exp((v-Vhalf)/B))
+    A_inf_m = 0.499622025796
+    B_inf_m = -4.9
+    Vhalf_inf_m = -59.0 
+    inf = A_inf_m / (exp((v - Vhalf_inf_m) / B_inf_m) + 1)
     
-    if ((0.41431+(108.69/(1+exp((-60.563-v)/5.2909))))/(v-67)/(109/(-107)) > 0.499622025796 ) {
-        inf =  0.499622025796 
-    } else {
-        inf =  (0.41431+(108.69/(1+exp((-60.563-v)/5.2909))))/(v-67)/(109/(-107))
-    }
     minf = inf
     
 
@@ -234,14 +233,17 @@ PROCEDURE rates(v(mV)) {
         
     ?      ***  Adding rate equations for gate: h  ***
          
-    ? Found a generic form of the rate equation for tau, using expression: 1 / ((-0.00288*(v + 17.049))/(1 - exp((v - 49.1)/4.63)) + (0.00694*(v + 64.409))/(1 - exp(-(v + 447)/2.63)))
-    tau = 1 / ((-0.00288*(v + 17.049))/(1 - exp((v - 49.1)/4.63)) + (0.00694*(v + 64.409))/(1 - exp(-(v + 447)/2.63)))
+    ? Found a generic form of the rate equation for tau, using expression: (5000+(16000 * (exp(0 - ((v + 50)/20)^2))))
+    tau = (5000+(16000 * (exp(0 - ((v + 50)/20)^2))))
         
     htau = tau/temp_adj_h
-     
-    ? Found a generic form of the rate equation for inf, using expression: (0.41431+(108.69/(1+exp((-60.563-v)/-5.2909))))/(v-67)/(109/(-107))
-    inf = (0.41431+(108.69/(1+exp((-60.563-v)/-5.2909))))/(v-67)/(109/(-107))
-        
+    
+    ? Found a parameterised form of rate equation for inf, using expression: A / (1 + exp((v-Vhalf)/B))
+    A_inf_h = 0.499622025796
+    B_inf_h = 4.9
+    Vhalf_inf_h = -59.0 
+    inf = A_inf_h / (exp((v - Vhalf_inf_h) / B_inf_h) + 1)
+    
     hinf = inf
     
 

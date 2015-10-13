@@ -275,7 +275,7 @@ part of NeuroML or any standardised XML specification. -->
    <void method="add">
     <object class="ucl.physiol.neuroconstruct.project.SimPlot">
      <void property="cellGroup">
-      <string>CellGroup_3</string>
+      <string>CellGroup_0</string>
      </void>
      <void property="cellNumber">
       <string>0</string>
@@ -436,7 +436,7 @@ part of NeuroML or any standardised XML specification. -->
       <string>0</string>
      </void>
      <void property="valuePlotted">
-      <string>Gran_CaHVA_98:COND_DENS:ca</string>
+      <string>CaV_R_iAMC_ChannelML:COND_DENS:ca</string>
      </void>
     </object>
    </void>
@@ -532,7 +532,7 @@ part of NeuroML or any standardised XML specification. -->
    <float>0.025</float>
   </void>
   <void property="duration">
-   <float>10000.0</float>
+   <float>2000.0</float>
   </void>
   <void property="reference">
    <string>Sim_11</string>
