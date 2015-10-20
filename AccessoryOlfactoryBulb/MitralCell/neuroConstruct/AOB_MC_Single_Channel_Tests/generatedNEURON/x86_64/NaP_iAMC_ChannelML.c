@@ -41,14 +41,18 @@ extern double hoc_Exp(double);
 #define mtau _p[3]
 #define hinf _p[4]
 #define htau _p[5]
-#define m _p[6]
-#define h _p[7]
-#define ena _p[8]
-#define ina _p[9]
-#define Dm _p[10]
-#define Dh _p[11]
-#define v _p[12]
-#define _g _p[13]
+#define ninf _p[6]
+#define ntau _p[7]
+#define m _p[8]
+#define h _p[9]
+#define n _p[10]
+#define ena _p[11]
+#define ina _p[12]
+#define Dm _p[13]
+#define Dh _p[14]
+#define Dn _p[15]
+#define v _p[16]
+#define _g _p[17]
 #define _ion_ena	*_ppvar[0]._pval
 #define _ion_ina	*_ppvar[1]._pval
 #define _ion_dinadv	*_ppvar[2]._pval
@@ -113,11 +117,13 @@ static void _check_table_thread(double* _p, Datum* _ppvar, Datum* _thread, _NrnT
  "gion_NaP_iAMC_ChannelML", "S/cm2",
  "mtau_NaP_iAMC_ChannelML", "ms",
  "htau_NaP_iAMC_ChannelML", "ms",
+ "ntau_NaP_iAMC_ChannelML", "ms",
  0,0
 };
  static double delta_t = 0.01;
  static double h0 = 0;
  static double m0 = 0;
+ static double n0 = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
  "usetable_NaP_iAMC_ChannelML", &usetable_NaP_iAMC_ChannelML,
@@ -150,9 +156,12 @@ static void _ode_matsol(_NrnThread*, _Memb_list*, int);
  "mtau_NaP_iAMC_ChannelML",
  "hinf_NaP_iAMC_ChannelML",
  "htau_NaP_iAMC_ChannelML",
+ "ninf_NaP_iAMC_ChannelML",
+ "ntau_NaP_iAMC_ChannelML",
  0,
  "m_NaP_iAMC_ChannelML",
  "h_NaP_iAMC_ChannelML",
+ "n_NaP_iAMC_ChannelML",
  0,
  0};
  static Symbol* _na_sym;
@@ -162,11 +171,11 @@ extern Prop* need_memb(Symbol*);
 static void nrn_alloc(Prop* _prop) {
 	Prop *prop_ion;
 	double *_p; Datum *_ppvar;
- 	_p = nrn_prop_data_alloc(_mechtype, 14, _prop);
+ 	_p = nrn_prop_data_alloc(_mechtype, 18, _prop);
  	/*initialize range parameters*/
  	gmax = 6e-05;
  	_prop->param = _p;
- 	_prop->param_size = 14;
+ 	_prop->param_size = 18;
  	_ppvar = nrn_prop_datum_alloc(_mechtype, 4, _prop);
  	_prop->dparam = _ppvar;
  	/*connect ionic variables to this model*/
@@ -212,6 +221,8 @@ extern void _cvode_abstol( Symbol**, double*, int);
  static double *_t_mtau;
  static double *_t_hinf;
  static double *_t_htau;
+ static double *_t_ninf;
+ static double *_t_ntau;
 static int _reset;
 static char *modelname = "Channel: NaP_iAMC_ChannelML";
 
@@ -225,7 +236,7 @@ static int rates(_threadargsprotocomma_ double);
 static int _ode_spec1(_threadargsproto_);
 /*static int _ode_matsol1(_threadargsproto_);*/
  static void _n_rates(_threadargsprotocomma_ double _lv);
- static int _slist1[2], _dlist1[2];
+ static int _slist1[3], _dlist1[3];
  static int states(_threadargsproto_);
  
 /*CVODE*/
@@ -233,6 +244,7 @@ static int _ode_spec1(_threadargsproto_);
    rates ( _threadargscomma_ v ) ;
    Dm = ( minf - m ) / mtau ;
    Dh = ( hinf - h ) / htau ;
+   Dn = ( ninf - n ) / ntau ;
    }
  return _reset;
 }
@@ -240,6 +252,7 @@ static int _ode_spec1(_threadargsproto_);
  rates ( _threadargscomma_ v ) ;
  Dm = Dm  / (1. - dt*( ( ( ( - 1.0 ) ) ) / mtau )) ;
  Dh = Dh  / (1. - dt*( ( ( ( - 1.0 ) ) ) / htau )) ;
+ Dn = Dn  / (1. - dt*( ( ( ( - 1.0 ) ) ) / ntau )) ;
  return 0;
 }
  /*END CVODE*/
@@ -247,6 +260,7 @@ static int _ode_spec1(_threadargsproto_);
    rates ( _threadargscomma_ v ) ;
     m = m + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / mtau)))*(- ( ( ( minf ) ) / mtau ) / ( ( ( ( - 1.0) ) ) / mtau ) - m) ;
     h = h + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / htau)))*(- ( ( ( hinf ) ) / htau ) / ( ( ( ( - 1.0) ) ) / htau ) - h) ;
+    n = n + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / ntau)))*(- ( ( ( ninf ) ) / ntau ) / ( ( ( ( - 1.0) ) ) / ntau ) - n) ;
    }
   return 0;
 }
@@ -267,6 +281,8 @@ static int _ode_spec1(_threadargsproto_);
     _t_mtau[_i] = mtau;
     _t_hinf[_i] = hinf;
     _t_htau[_i] = htau;
+    _t_ninf[_i] = ninf;
+    _t_ntau[_i] = ntau;
    }
    _sav_celsius = celsius;
   }
@@ -292,25 +308,32 @@ _check_rates(_p, _ppvar, _thread, _nt);
  mtau = _t_mtau[0];
  hinf = _t_hinf[0];
  htau = _t_htau[0];
+ ninf = _t_ninf[0];
+ ntau = _t_ntau[0];
  return; }
  if (_i >= 2000) {
  minf = _t_minf[2000];
  mtau = _t_mtau[2000];
  hinf = _t_hinf[2000];
  htau = _t_htau[2000];
+ ninf = _t_ninf[2000];
+ ntau = _t_ntau[2000];
  return; }
  _theta = _xi - (double)_i;
  minf = _t_minf[_i] + _theta*(_t_minf[_i+1] - _t_minf[_i]);
  mtau = _t_mtau[_i] + _theta*(_t_mtau[_i+1] - _t_mtau[_i]);
  hinf = _t_hinf[_i] + _theta*(_t_hinf[_i+1] - _t_hinf[_i]);
  htau = _t_htau[_i] + _theta*(_t_htau[_i+1] - _t_htau[_i]);
+ ninf = _t_ninf[_i] + _theta*(_t_ninf[_i+1] - _t_ninf[_i]);
+ ntau = _t_ntau[_i] + _theta*(_t_ntau[_i+1] - _t_ntau[_i]);
  }
 
  
 static int  _f_rates ( _threadargsprotocomma_ double _lv ) {
-   double _lalpha , _lbeta , _ltau , _linf , _lgamma , _lzeta , _ltemp_adj_m , _lA_inf_m , _lB_inf_m , _lVhalf_inf_m , _ltemp_adj_h , _lA_inf_h , _lB_inf_h , _lVhalf_inf_h ;
+   double _lalpha , _lbeta , _ltau , _linf , _lgamma , _lzeta , _ltemp_adj_m , _lA_inf_m , _lB_inf_m , _lVhalf_inf_m , _ltemp_adj_h , _lA_inf_h , _lB_inf_h , _lVhalf_inf_h , _ltemp_adj_n , _lA_inf_n , _lB_inf_n , _lVhalf_inf_n ;
   _ltemp_adj_m = 1.0 ;
    _ltemp_adj_h = 1.0 ;
+   _ltemp_adj_n = 1.0 ;
    _ltau = ( 1.0 + ( 4.0 * ( exp ( 0.0 - pow( ( ( _lv + 50.0 ) / 20.0 ) , 2.0 ) ) ) ) ) ;
    mtau = _ltau / _ltemp_adj_m ;
    _lA_inf_m = 0.499622025796 ;
@@ -325,6 +348,13 @@ static int  _f_rates ( _threadargsprotocomma_ double _lv ) {
    _lVhalf_inf_h = - 59.0 ;
    _linf = _lA_inf_h / ( exp ( ( _lv - _lVhalf_inf_h ) / _lB_inf_h ) + 1.0 ) ;
    hinf = _linf ;
+   _ltau = ( 2.0 + ( 4.0 * ( exp ( 0.0 - pow( ( ( _lv + 50.0 ) / 20.0 ) , 2.0 ) ) ) ) ) ;
+   ntau = _ltau / _ltemp_adj_n ;
+   _lA_inf_n = 0.499622025796 ;
+   _lB_inf_n = 4.9 ;
+   _lVhalf_inf_n = - 59.0 ;
+   _linf = _lA_inf_n / ( exp ( ( _lv - _lVhalf_inf_n ) / _lB_inf_n ) + 1.0 ) ;
+   ninf = _linf ;
     return 0; }
  
 static void _hoc_rates(void) {
@@ -342,7 +372,7 @@ static void _hoc_rates(void) {
  hoc_retpushx(_r);
 }
  
-static int _ode_count(int _type){ return 2;}
+static int _ode_count(int _type){ return 3;}
  
 static void _ode_spec(_NrnThread* _nt, _Memb_list* _ml, int _type) {
    double* _p; Datum* _ppvar; Datum* _thread;
@@ -361,7 +391,7 @@ static void _ode_map(int _ieq, double** _pv, double** _pvdot, double* _pp, Datum
 	double* _p; Datum* _ppvar;
  	int _i; _p = _pp; _ppvar = _ppd;
 	_cvode_ieq = _ieq;
-	for (_i=0; _i < 2; ++_i) {
+	for (_i=0; _i < 3; ++_i) {
 		_pv[_i] = _pp + _slist1[_i];  _pvdot[_i] = _pp + _dlist1[_i];
 		_cvode_abstol(_atollist, _atol, _i);
 	}
@@ -390,11 +420,13 @@ static void initmodel(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt
   int _i; double _save;{
   h = h0;
   m = m0;
+  n = n0;
  {
    ena = 67.0 ;
    rates ( _threadargscomma_ v ) ;
    m = minf ;
    h = hinf ;
+   n = ninf ;
    }
  
 }
@@ -429,7 +461,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  }}
 
 static double _nrn_current(double* _p, Datum* _ppvar, Datum* _thread, _NrnThread* _nt, double _v){double _current=0.;v=_v;{ {
-   gion = gmax * ( pow( ( 1.0 * m ) , 3.0 ) ) * ( pow( ( 1.0 * h ) , 1.0 ) ) ;
+   gion = gmax * ( pow( ( 1.0 * m ) , 3.0 ) ) * ( pow( ( 1.0 * h ) , 1.0 ) ) * ( pow( ( 1.0 * n ) , 1.0 ) ) ;
    ina = gion * ( v - ena ) ;
    }
  _current += ina;
@@ -541,10 +573,13 @@ static void _initlists(){
   if (!_first) return;
  _slist1[0] = &(m) - _p;  _dlist1[0] = &(Dm) - _p;
  _slist1[1] = &(h) - _p;  _dlist1[1] = &(Dh) - _p;
+ _slist1[2] = &(n) - _p;  _dlist1[2] = &(Dn) - _p;
    _t_minf = makevector(2001*sizeof(double));
    _t_mtau = makevector(2001*sizeof(double));
    _t_hinf = makevector(2001*sizeof(double));
    _t_htau = makevector(2001*sizeof(double));
+   _t_ninf = makevector(2001*sizeof(double));
+   _t_ntau = makevector(2001*sizeof(double));
 _first = 0;
 }
 

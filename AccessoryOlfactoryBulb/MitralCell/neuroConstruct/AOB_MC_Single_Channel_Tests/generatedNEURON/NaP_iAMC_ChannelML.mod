@@ -58,6 +58,23 @@ COMMENT
    /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@rate = 0.499622025796 
    /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@scale = 4.9 
    /channelml/channel_type/current_voltage_relation/gate[2]/steady_state/@midpoint = -59.0 
+   /channelml/channel_type/current_voltage_relation/gate[3]/@name = n 
+   /channelml/channel_type/current_voltage_relation/gate[3]/@instances = 1 
+   /channelml/channel_type/current_voltage_relation/gate[3]/closed_state/@id = n0 
+   /channelml/channel_type/current_voltage_relation/gate[3]/open_state/@id = n 
+   /channelml/channel_type/current_voltage_relation/gate[3]/open_state/@fraction = 1 
+   /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@name = tau 
+   /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@from = n0 
+   /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@to = n 
+   /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@expr_form = generic 
+   /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@expr = (2+(4 * (exp(0 - ((v + 50)/20)^2)))) 
+   /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@name = inf 
+   /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@from = n0 
+   /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@to = n 
+   /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@expr_form = sigmoid 
+   /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@rate = 0.499622025796 
+   /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@scale = 4.9 
+   /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@midpoint = -59.0 
    /channelml/channel_type/impl_prefs/table_settings/@max_v = 100 
    /channelml/channel_type/impl_prefs/table_settings/@min_v = -100 
    /channelml/channel_type/impl_prefs/table_settings/@table_divisions = 2000 
@@ -109,6 +126,8 @@ NEURON {
     
     RANGE hinf, htau
     
+    RANGE ninf, ntau
+    
 }
 
 PARAMETER { 
@@ -139,6 +158,8 @@ ASSIGNED {
     mtau (ms)
     hinf
     htau (ms)
+    ninf
+    ntau (ms)
     
 }
 
@@ -148,6 +169,7 @@ BREAKPOINT {
         
     gion = gmax * ((1*m)
 ^3) * ((1*h)
+^1) * ((1*n)
 ^1)      
 
     ina = gion*(v - ena)
@@ -164,6 +186,7 @@ INITIAL {
     rates(v)
     m = minf
         h = hinf
+        n = ninf
         
     
 }
@@ -171,6 +194,7 @@ INITIAL {
 STATE {
     m
     h
+    n
     
 }
 
@@ -180,6 +204,7 @@ DERIVATIVE states {
     rates(v)
     m' = (minf - m)/mtau
             h' = (hinf - h)/htau
+            n' = (ninf - n)/ntau
             
 
 }
@@ -192,13 +217,16 @@ PROCEDURE rates(v(mV)) {
          A_inf_m, B_inf_m, Vhalf_inf_m
 , temp_adj_h,
          A_inf_h, B_inf_h, Vhalf_inf_h
+, temp_adj_n,
+         A_inf_n, B_inf_n, Vhalf_inf_n
     
-    TABLE minf, mtau,hinf, htau
+    TABLE minf, mtau,hinf, htau,ninf, ntau
  DEPEND celsius FROM -100 TO 100 WITH 2000
     
     UNITSOFF
     temp_adj_m = 1
     temp_adj_h = 1
+    temp_adj_n = 1
     
             
                 
@@ -249,6 +277,32 @@ PROCEDURE rates(v(mV)) {
 
 
     ?     *** Finished rate equations for gate: h ***
+    
+
+    
+            
+                
+           
+
+        
+    ?      ***  Adding rate equations for gate: n  ***
+         
+    ? Found a generic form of the rate equation for tau, using expression: (2+(4 * (exp(0 - ((v + 50)/20)^2))))
+    tau = (2+(4 * (exp(0 - ((v + 50)/20)^2))))
+        
+    ntau = tau/temp_adj_n
+    
+    ? Found a parameterised form of rate equation for inf, using expression: A / (1 + exp((v-Vhalf)/B))
+    A_inf_n = 0.499622025796
+    B_inf_n = 4.9
+    Vhalf_inf_n = -59.0 
+    inf = A_inf_n / (exp((v - Vhalf_inf_n) / B_inf_n) + 1)
+    
+    ninf = inf
+    
+
+
+    ?     *** Finished rate equations for gate: n ***
     
 
          

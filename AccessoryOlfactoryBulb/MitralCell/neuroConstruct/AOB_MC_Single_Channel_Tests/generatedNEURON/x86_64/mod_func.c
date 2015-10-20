@@ -7,7 +7,7 @@ extern void _CaV_R_iAMC_ChannelML_reg(void);
 extern void _Gran_CaPool_98_reg(void);
 extern void _Gran_KCa_98_reg(void);
 extern void _KA_iAMC_ChannelML_reg(void);
-extern void _Kdr_ChannelML_reg(void);
+extern void _Kdr_iAMC_ChannelML_reg(void);
 extern void _LeakConductance_reg(void);
 extern void _NaP_iAMC_ChannelML_reg(void);
 extern void _NaxSH0_ChannelML_reg(void);
@@ -21,7 +21,7 @@ void modl_reg(){
     fprintf(stderr," Gran_CaPool_98.mod");
     fprintf(stderr," Gran_KCa_98.mod");
     fprintf(stderr," KA_iAMC_ChannelML.mod");
-    fprintf(stderr," Kdr_ChannelML.mod");
+    fprintf(stderr," Kdr_iAMC_ChannelML.mod");
     fprintf(stderr," LeakConductance.mod");
     fprintf(stderr," NaP_iAMC_ChannelML.mod");
     fprintf(stderr," NaxSH0_ChannelML.mod");
@@ -32,7 +32,7 @@ void modl_reg(){
   _Gran_CaPool_98_reg();
   _Gran_KCa_98_reg();
   _KA_iAMC_ChannelML_reg();
-  _Kdr_ChannelML_reg();
+  _Kdr_iAMC_ChannelML_reg();
   _LeakConductance_reg();
   _NaP_iAMC_ChannelML_reg();
   _NaxSH0_ChannelML_reg();

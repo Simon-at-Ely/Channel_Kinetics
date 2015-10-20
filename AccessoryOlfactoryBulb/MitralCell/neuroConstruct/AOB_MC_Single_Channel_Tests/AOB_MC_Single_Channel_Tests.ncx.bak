@@ -352,7 +352,7 @@ part of NeuroML or any standardised XML specification. -->
       <string>0</string>
      </void>
      <void property="valuePlotted">
-      <string>Kdr_ChannelML:COND_DENS:k</string>
+      <string>Kdr_iAMC_ChannelML:COND_DENS:k</string>
      </void>
     </object>
    </void>

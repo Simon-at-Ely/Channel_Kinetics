@@ -44,6 +44,13 @@
                 <steady_state name="inf" from="h0" to="h" expr_form="sigmoid" rate="0.499622025796" scale="4.9" midpoint="-59.0"/>
 	    </gate>
 
+            <gate name="n" instances="1">
+                <closed_state id="n0"/>
+                <open_state id="n" fraction="1"/>
+                     
+                <time_course name="tau" from="n0" to="n" expr_form="generic" expr="(2+(4 * (exp(0 - ((v + 50)/20)^2))))"/>
+                <steady_state name="inf" from="n0" to="n" expr_form="sigmoid" rate="0.499622025796" scale="4.9" midpoint="-59.0"/>
+	    </gate>	    
 	</current_voltage_relation>        
         
         <impl_prefs>
