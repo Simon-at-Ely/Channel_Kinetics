@@ -36,7 +36,7 @@
 		<open_state id="n"/>
 
 		<time_course name="tau" from="n0" to="n" expr_form="generic" expr="v &lt; -66.67 ? 72.9070265127 : 8.69 +(46.27/(exp((v + 60.97)/17.39)))"/>
-		<steady_state name="inf" from="n0" to="n" expr_form="generic" expr="v &lt; -42 ? 0 : ((-0.006*v) + 0.40)"/>
+		<steady_state name="inf" from="n0" to="n" expr_form="generic" expr="v &lt; -15 ? 0 : ((-0.006*v) + 0.40)"/>
 
 	    </gate>	    
         </current_voltage_relation>
