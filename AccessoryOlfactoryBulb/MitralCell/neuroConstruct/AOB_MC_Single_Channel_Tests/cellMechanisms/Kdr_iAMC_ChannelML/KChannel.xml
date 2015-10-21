@@ -27,16 +27,17 @@
                 <open_state id="m" fraction="1"/>
       
                 <time_course name="tau" from="m0" to="m" expr_form="generic" expr="v &lt; -66.67 ? 230.256604897 : 29.156*exp(-(v+55)/5.8842) + 18.394"/>
-                <steady_state name="inf" from="m0" to="m" expr_form="generic" expr="v &lt; -66.67 ? 0 : 0.006*v + 0.40"/>
+                <steady_state name="inf" from="m0" to="m" expr_form="generic" expr="v &lt; -66.67 ? 0 : 0.005*v + 0.35"/>
 
 	    </gate>
 	    
 	    <gate name="n" instances="1">
 		<closed_state id="n0"/>
 		<open_state id="n"/>
-
-		<time_course name="tau" from="n0" to="n" expr_form="generic" expr="v &lt; -66.67 ? 72.9070265127 : 8.69 +(46.27/(exp((v + 60.97)/17.39)))"/>
-		<steady_state name="inf" from="n0" to="n" expr_form="generic" expr="v &lt; -15 ? 0 : ((-0.006*v) + 0.40)"/>
+		
+		<time_course name="tau" from="n0" to="n" expr_form="generic" expr="5"/>
+		<!--time_course name="tau" from="n0" to="n" expr_form="generic" expr="v &lt; -66.67 ? 25.3445130355 : 8.69 +(12/(exp((v + 60.97)/17.39)))"/-->
+		<steady_state name="inf" from="n0" to="n" expr_form="generic" expr="v &lt; -10 ? 0 : ((-0.006*v) + 0.40)"/>
 
 	    </gate>	    
         </current_voltage_relation>

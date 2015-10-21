@@ -411,7 +411,7 @@ part of NeuroML or any standardised XML specification. -->
       <string>0</string>
      </void>
      <void property="valuePlotted">
-      <string>Gran_KCa_98:COND_DENS:k</string>
+      <string>BK_IAMC_ChannelML:COND_DENS:k</string>
      </void>
     </object>
    </void>
