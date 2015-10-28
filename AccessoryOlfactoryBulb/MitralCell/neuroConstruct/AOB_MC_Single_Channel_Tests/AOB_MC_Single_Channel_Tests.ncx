@@ -553,7 +553,7 @@ part of NeuroML or any standardised XML specification. -->
    <float>0.025</float>
   </void>
   <void property="duration">
-   <float>2000.0</float>
+   <float>60000.0</float>
   </void>
   <void property="reference">
    <string>Sim_11</string>
@@ -648,30 +648,9 @@ part of NeuroML or any standardised XML specification. -->
       <void method="add">
        <string>CellGroup_0_v</string>
       </void>
-      <void method="add">
-       <string>Var_0</string>
-      </void>
-      <void method="add">
-       <string>Var_1</string>
-      </void>
-      <void method="add">
-       <string>Var_2</string>
-      </void>
-      <void method="add">
-       <string>Var_3</string>
-      </void>
-      <void method="add">
-       <string>Var_4</string>
-      </void>
-      <void method="add">
-       <string>Var_5</string>
-      </void>
-      <void method="add">
-       <string>Var_6</string>
-      </void>
      </void>
      <void property="simDuration">
-      <float>10000.0</float>
+      <float>60000.0</float>
      </void>
     </object>
    </void>

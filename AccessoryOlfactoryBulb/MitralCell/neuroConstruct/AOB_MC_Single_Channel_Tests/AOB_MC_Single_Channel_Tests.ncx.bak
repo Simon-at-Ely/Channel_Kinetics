@@ -261,6 +261,9 @@ part of NeuroML or any standardised XML specification. -->
      <void property="minValue">
       <float>0.0</float>
      </void>
+     <void property="plotAndOrSave">
+      <string>Plot and save</string>
+     </void>
      <void property="plotReference">
       <string>Var_0</string>
      </void>
@@ -320,6 +323,9 @@ part of NeuroML or any standardised XML specification. -->
      <void property="minValue">
       <float>-2.5E-7</float>
      </void>
+     <void property="plotAndOrSave">
+      <string>Plot and save</string>
+     </void>
      <void property="plotReference">
       <string>Var_2</string>
      </void>
@@ -347,6 +353,9 @@ part of NeuroML or any standardised XML specification. -->
      </void>
      <void property="minValue">
       <float>-2.0E-8</float>
+     </void>
+     <void property="plotAndOrSave">
+      <string>Plot and save</string>
      </void>
      <void property="plotReference">
       <string>Var_3</string>
@@ -376,6 +385,9 @@ part of NeuroML or any standardised XML specification. -->
      <void property="minValue">
       <float>-2.0E-8</float>
      </void>
+     <void property="plotAndOrSave">
+      <string>Plot and save</string>
+     </void>
      <void property="plotReference">
       <string>Var_4</string>
      </void>
@@ -404,6 +416,9 @@ part of NeuroML or any standardised XML specification. -->
      <void property="minValue">
       <float>-2.5E-7</float>
      </void>
+     <void property="plotAndOrSave">
+      <string>Plot and save</string>
+     </void>
      <void property="plotReference">
       <string>Var_5</string>
      </void>
@@ -431,6 +446,9 @@ part of NeuroML or any standardised XML specification. -->
      </void>
      <void property="minValue">
       <float>-2.5E-7</float>
+     </void>
+     <void property="plotAndOrSave">
+      <string>Plot and save</string>
      </void>
      <void property="plotReference">
       <string>Var_6</string>
