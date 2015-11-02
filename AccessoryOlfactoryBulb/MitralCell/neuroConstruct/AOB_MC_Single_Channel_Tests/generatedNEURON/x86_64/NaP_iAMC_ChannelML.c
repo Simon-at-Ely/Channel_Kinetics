@@ -348,7 +348,7 @@ static int  _f_rates ( _threadargsprotocomma_ double _lv ) {
    _lVhalf_inf_h = - 59.0 ;
    _linf = _lA_inf_h / ( exp ( ( _lv - _lVhalf_inf_h ) / _lB_inf_h ) + 1.0 ) ;
    hinf = _linf ;
-   _ltau = 1.0 ;
+   _ltau = ( 2.0 + ( 4.0 * ( exp ( 0.0 - pow( ( ( _lv + 50.0 ) / 20.0 ) , 2.0 ) ) ) ) ) ;
    ntau = _ltau / _ltemp_adj_n ;
    _lA_inf_n = 0.499622025796 ;
    _lB_inf_n = 4.9 ;
