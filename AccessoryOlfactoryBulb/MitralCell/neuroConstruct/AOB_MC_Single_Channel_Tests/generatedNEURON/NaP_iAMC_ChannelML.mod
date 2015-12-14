@@ -67,7 +67,7 @@ COMMENT
    /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@from = n0 
    /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@to = n 
    /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@expr_form = generic 
-   /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@expr = (2+(4 * (exp(0 - ((v + 50)/20)^2)))) 
+   /channelml/channel_type/current_voltage_relation/gate[3]/time_course/@expr = 1 
    /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@name = inf 
    /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@from = n0 
    /channelml/channel_type/current_voltage_relation/gate[3]/steady_state/@to = n 
@@ -287,8 +287,8 @@ PROCEDURE rates(v(mV)) {
         
     ?      ***  Adding rate equations for gate: n  ***
          
-    ? Found a generic form of the rate equation for tau, using expression: (2+(4 * (exp(0 - ((v + 50)/20)^2))))
-    tau = (2+(4 * (exp(0 - ((v + 50)/20)^2))))
+    ? Found a generic form of the rate equation for tau, using expression: 1
+    tau = 1
         
     ntau = tau/temp_adj_n
     
