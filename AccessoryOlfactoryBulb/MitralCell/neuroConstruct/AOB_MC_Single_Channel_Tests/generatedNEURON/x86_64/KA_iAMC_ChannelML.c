@@ -200,7 +200,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
      _nrn_setdata_reg(_mechtype, _setdata);
      _nrn_thread_reg(_mechtype, 2, _update_ion_pointer);
      _nrn_thread_table_reg(_mechtype, _check_table_thread);
-  hoc_register_dparam_size(_mechtype, 4);
+  hoc_register_prop_size(_mechtype, 14, 4);
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
@@ -286,19 +286,26 @@ _check_rates(_p, _ppvar, _thread, _nt);
  _f_rates(_p, _ppvar, _thread, _nt, _lv); return; 
 }
  _xi = _mfac_rates * (_lv - _tmin_rates);
- _i = (int) _xi;
+ if (isnan(_xi)) {
+  minf = _xi;
+  mtau = _xi;
+  hinf = _xi;
+  htau = _xi;
+  return;
+ }
  if (_xi <= 0.) {
  minf = _t_minf[0];
  mtau = _t_mtau[0];
  hinf = _t_hinf[0];
  htau = _t_htau[0];
  return; }
- if (_i >= 400) {
+ if (_xi >= 400.) {
  minf = _t_minf[400];
  mtau = _t_mtau[400];
  hinf = _t_hinf[400];
  htau = _t_htau[400];
  return; }
+ _i = (int) _xi;
  _theta = _xi - (double)_i;
  minf = _t_minf[_i] + _theta*(_t_minf[_i+1] - _t_minf[_i]);
  mtau = _t_mtau[_i] + _theta*(_t_mtau[_i+1] - _t_mtau[_i]);

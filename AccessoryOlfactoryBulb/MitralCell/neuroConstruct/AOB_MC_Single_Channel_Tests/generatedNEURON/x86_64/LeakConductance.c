@@ -142,7 +142,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	register_mech(_mechanism, nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init, hoc_nrnpointerindex, 1);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
      _nrn_setdata_reg(_mechtype, _setdata);
-  hoc_register_dparam_size(_mechtype, 0);
+  hoc_register_prop_size(_mechtype, 5, 0);
  	hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
  	ivoc_help("help ?1 LeakConductance /home/Simon/Channel_Kinetics/AccessoryOlfactoryBulb/MitralCell/neuroConstruct/AOB_MC_Single_Channel_Tests/generatedNEURON/x86_64/LeakConductance.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
